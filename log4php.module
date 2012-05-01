@@ -19,8 +19,15 @@ function log4php_watchdog(array $log_entry) {
     $log_entry['user']->uid > 0 ? $log_entry['user']->name : t('Anonymous'),
     $log_entry['request_uri'],
     $log_entry['ip'],
-    strip_tags(t($log_entry['message'], $log_entry['variables'])),
   );
+
+  // Add message, depending on whether it is currently translated or untranslatable
+  if ($log_entry['variables'] != NULL) {
+    $msg[] = strip_tags(t($log_entry['message'], $log_entry['variables']));
+  } elseif ($log_entry['variables'] != NULL) {
+    $msg[] = strip_tags(t($log_entry['message']);
+  }
+
   // Allow other modules to change the format
   drupal_alter('log4php', $msg, $log_entry);
   $msg = implode(' ', $msg);
