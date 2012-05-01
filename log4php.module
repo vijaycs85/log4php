@@ -10,8 +10,9 @@ function log4php_watchdog(array $log_entry) {
   if (!isset($logger)) {
     require_once(_log4php_get_path());
     Logger::configure($conf['log4php_config']);
-    $logger = Logger::getLogger('drupal');
   }
+  
+  $logger = Logger::getLogger('drupal:' . $log_entry['type']);
   
   // Construct plain-text message
   $msg = array(
