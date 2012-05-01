@@ -1,0 +1,3 @@
+name = Apache log4php
+description = Logs and records system events to <a href="http://logging.apache.org/log4php/">Apache log4php</a>.
+core = 7.x

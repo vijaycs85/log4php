@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * Implements hook_watchdog().
+ */
+function log4php_watchdog(array $log_entry) {
+  global $conf;
+  static $logger;
+
+  if (!isset($logger)) {
+    require_once(_log4php_get_path());
+    Logger::configure($conf['log4php_config']);
+    $logger = Logger::getLogger('drupal');
+  }
+  
+  // Construct plain-text message
+  $msg = array(
+    $log_entry['user']->uid > 0 ? $log_entry['user']->name : t('Anonymous'),
+    $log_entry['request_uri'],
+    $log_entry['ip'],
+    strip_tags(t($log_entry['message'], $log_entry['variables'])),
+  );
+  // Allow other modules to change the format
+  drupal_alter('log4php', $msg, $log_entry);
+  $msg = implode(' ', $msg);
+
+  // Map Drupal severity levels to log4php levels
+  // (Drupal currently has no analog to TRACE)
+  switch ($log_entry['severity']) {
+    case WATCHDOG_EMERGENCY:
+    case WATCHDOG_ALERT:
+    case WATCHDOG_CRITICAL:
+      $logger->fatal($msg);
+      break;
+    case WATCHDOG_ERROR:
+      $logger->error($msg);
+      break;
+    case WATCHDOG_WARNING:
+      $logger->warn($msg);
+      break;
+    case WATCHDOG_NOTICE:
+    case WATCHDOG_INFO:
+      $logger->info($msg);
+      break;
+    case WATCHDOG_DEBUG:
+      $logger->debug($msg);
+      break;
+  }
+}
+
+/**
+ * Helper function to determine if log4php libraries are installed correctly.
+ */
+function _log4php_get_path() {
+  // Check for preferred PEAR installation
+  if (file_exists('log4php/Logger.php')) {
+    $path = 'log4php/Logger.php';
+  }
+  elseif (module_exists('libraries') && file_exists(libraries_get_path('log4php') . '/Logger.php')) {
+    // Use Libraries module, if available
+    $path = libraries_get_path('log4php') . '/Logger.php';
+  }
+
+  return isset($path) ? $path : NULL;
+}
+
