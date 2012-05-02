@@ -19,14 +19,8 @@ function log4php_watchdog(array $log_entry) {
     $log_entry['user']->uid > 0 ? $log_entry['user']->name : t('Anonymous'),
     $log_entry['request_uri'],
     $log_entry['ip'],
+    strip_tags(t($log_entry['message'], is_array($log_entry['variables']) ? $log_entry['variables'] : array())),
   );
-
-  // Add message, depending on whether it is currently translated or untranslatable
-  if ($log_entry['variables'] != NULL) {
-    $msg[] = strip_tags(t($log_entry['message'], $log_entry['variables']));
-  } elseif ($log_entry['variables'] != NULL) {
-    $msg[] = strip_tags(t($log_entry['message']);
-  }
 
   // Allow other modules to change the format
   drupal_alter('log4php', $msg, $log_entry);
@@ -60,7 +54,7 @@ function log4php_watchdog(array $log_entry) {
  * Helper function to determine if log4php libraries are installed correctly.
  */
 function _log4php_get_path() {
-  // Check for preferred PEAR installation
+  // Check for preferred PEAR installation (or within module directory)
   if (file_exists('log4php/Logger.php')) {
     $path = 'log4php/Logger.php';
   }
@@ -71,4 +65,3 @@ function _log4php_get_path() {
 
   return isset($path) ? $path : NULL;
 }
-
