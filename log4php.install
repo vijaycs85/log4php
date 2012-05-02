@@ -12,8 +12,7 @@ function log4php_requirements($phase = 'runtime') {
   $requirements = array();
   $t = get_t();
 
-  $path = _log4php_get_path();
-  if (isset($path)) {
+  if (_log4php_get_path() == NULL) {
     $requirements['log4php'] = array(
       'title' => $t('log4php'),
       'value' => $t('Not installed'),
@@ -24,5 +23,3 @@ function log4php_requirements($phase = 'runtime') {
 
   return $requirements;
 }
-
-
