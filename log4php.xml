@@ -5,13 +5,13 @@
         <param name="file" value="/tmp/log4php.log" />
         <param name="append" value="true" />
     </appender>
-    <!--<appender name="redis" class="LoggerAppenderRedis">
+    <!-- <appender name="redis" class="LoggerAppenderRedis">
         <layout class="LoggerLayoutSimple" />
         <param name="prefixName" value="drupal_" />
         <param name="listName" value="drupal:watchdog" />
-    </appender>-->
+    </appender> -->
     <root>
         <appender_ref ref="file" />
-        <appender_ref ref="redis" />
+        <!-- <appender_ref ref="redis" /> -->
     </root>
 </configuration>

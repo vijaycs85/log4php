@@ -12,6 +12,8 @@ function log4php_requirements($phase = 'runtime') {
   $requirements = array();
   $t = get_t();
 
+  drupal_load('module', 'log4php');
+
   if (_log4php_get_path() == NULL) {
     $requirements['log4php'] = array(
       'title' => $t('log4php'),
