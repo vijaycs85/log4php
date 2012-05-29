@@ -8,7 +8,13 @@ function log4php_watchdog(array $log_entry) {
   static $logger;
 
   if (!isset($logger)) {
-    require_once(_log4php_get_path());
+    $logger_path = _log4php_get_path();
+    // libraries module might not be available if watchdog is being called during hook_boot() phase
+    // @TODO not sure if this is the best way to handle this scenario
+    if (empty($logger_path)) {
+      return;
+    }
+    require_once($logger_path);
     Logger::configure($conf['log4php_config']);
   }
   
