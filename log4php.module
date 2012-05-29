@@ -64,9 +64,17 @@ function _log4php_get_path() {
   if (file_exists('log4php/Logger.php')) {
     $path = 'log4php/Logger.php';
   }
-  elseif (module_exists('libraries') && file_exists(libraries_get_path('log4php') . '/Logger.php')) {
+  elseif (module_exists('libraries')) {
     // Use Libraries module, if available
-    $path = libraries_get_path('log4php') . '/Logger.php';
+    if (file_exists(libraries_get_path('log4php') . '/Logger.php')) {
+      // check if the library is in the recommended location
+      $path = libraries_get_path('log4php') . '/Logger.php';
+    }
+    elseif(file_exists(libraries_get_path('log4php') . '/src/main/php/Logger.php')) {
+      // check if the library has been downloaded directly into libraries folder
+      // this caters for drush make files
+      $path = libraries_get_path('log4php') . '/src/main/php/Logger.php';
+    }
   }
 
   return isset($path) ? $path : NULL;
