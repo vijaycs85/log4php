@@ -24,6 +24,15 @@ The preferred installation method is via PEAR -
   pear channel-discover pear.apache.org/log4php
   pear install log4php/Apache_log4php
 
+To install the library using Drush Make, use the following snippet -
+
+  # Currently not able to download only the appropriate folder
+  # See http://drupal.org/node/1630814
+  libraries[log4php][download][type] = "get"
+  libraries[log4php][download][url] = "http://www.gtlib.gatech.edu/pub/apache/logging/log4php/2.2.1/apache-log4php-2.2.1-src.tar.gz"
+  libraries[log4php][download][md5] = "79343108ab898821bcb8fd2fca711992"
+  libraries[log4php][directory_name] = "log4php"
+
 Alternatively the main code files can be installed via the Libraries module. Move the src/main/php directory to sites/all/libraries/log4php.
 
 
