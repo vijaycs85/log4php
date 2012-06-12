@@ -70,7 +70,7 @@ function _log4php_get_path() {
       // check if the library is in the recommended location
       $path = libraries_get_path('log4php') . '/Logger.php';
     }
-    elseif(file_exists(libraries_get_path('log4php') . '/src/main/php/Logger.php')) {
+    elseif (file_exists(libraries_get_path('log4php') . '/src/main/php/Logger.php')) {
       // check if the library has been downloaded directly into libraries folder
       // this caters for drush make files
       $path = libraries_get_path('log4php') . '/src/main/php/Logger.php';
