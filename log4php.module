@@ -17,20 +17,13 @@ function log4php_watchdog(array $log_entry) {
     require_once($logger_path);
     Logger::configure($conf['log4php_config']);
   }
-  
+
   $logger = Logger::getLogger('drupal:' . $log_entry['type']);
-  
-  // Construct plain-text message
-  $msg = array(
-    $log_entry['user']->uid > 0 ? $log_entry['user']->name : t('Anonymous'),
-    $log_entry['request_uri'],
-    $log_entry['ip'],
-    strip_tags(t($log_entry['message'], is_array($log_entry['variables']) ? $log_entry['variables'] : array())),
-  );
+
+  $log_object = LoggerRendererDrupalLogObject::getInstanceFromLogEntry($log_entry);
 
   // Allow other modules to change the format
-  drupal_alter('log4php', $msg, $log_entry);
-  $msg = implode(' ', $msg);
+  drupal_alter('log4php', $log_object);
 
   // Map Drupal severity levels to log4php levels
   // (Drupal currently has no analog to TRACE)
@@ -38,20 +31,20 @@ function log4php_watchdog(array $log_entry) {
     case WATCHDOG_EMERGENCY:
     case WATCHDOG_ALERT:
     case WATCHDOG_CRITICAL:
-      $logger->fatal($msg);
+      $logger->fatal($log_object);
       break;
     case WATCHDOG_ERROR:
-      $logger->error($msg);
+      $logger->error($log_object);
       break;
     case WATCHDOG_WARNING:
-      $logger->warn($msg);
+      $logger->warn($log_object);
       break;
     case WATCHDOG_NOTICE:
     case WATCHDOG_INFO:
-      $logger->info($msg);
+      $logger->info($log_object);
       break;
     case WATCHDOG_DEBUG:
-      $logger->debug($msg);
+      $logger->debug($log_object);
       break;
   }
 }
@@ -78,4 +71,48 @@ function _log4php_get_path() {
   }
 
   return isset($path) ? $path : NULL;
+}
+
+/**
+ * Mostly a clone of t function which uses format_string() to sanitize log messages
+ * that are being shows in a page. We don't want that but we do need translation support
+ *
+ * @param $string
+ * @param array $args
+ * @param array $options
+ * @return array|null|string
+ */
+function log4php_t($string, array $args = array(), array $options = array()) {
+  global $language;
+  static $custom_strings;
+
+  // Merge in default.
+  if (empty($options['langcode'])) {
+    $options['langcode'] = isset($language->language) ? $language->language : 'en';
+  }
+  if (empty($options['context'])) {
+    $options['context'] = '';
+  }
+
+  // First, check for an array of customized strings. If present, use the array
+  // *instead of* database lookups. This is a high performance way to provide a
+  // handful of string replacements. See settings.php for examples.
+  // Cache the $custom_strings variable to improve performance.
+  if (!isset($custom_strings[$options['langcode']])) {
+    $custom_strings[$options['langcode']] = variable_get('locale_custom_strings_' . $options['langcode'], array());
+  }
+  // Custom strings work for English too, even if locale module is disabled.
+  if (isset($custom_strings[$options['langcode']][$options['context']][$string])) {
+    $string = $custom_strings[$options['langcode']][$options['context']][$string];
+  }
+  // Translate with locale module if enabled.
+  elseif ($options['langcode'] != 'en' && function_exists('locale')) {
+    $string = locale($string, $options['context'], $options['langcode']);
+  }
+  if (empty($args)) {
+    return $string;
+  }
+  else {
+    return strtr($string, $args);
+  }
 }

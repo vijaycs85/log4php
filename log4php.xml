@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration xmlns="http://logging.apache.org/log4php/">
+
+    <renderer renderedClass="LoggerRendererDrupalLogObject" renderingClass="LoggerRendererDrupalPlainLocaleObject" />
+
     <appender name="file" class="LoggerAppenderFile">
         <layout class="LoggerLayoutPattern" />
         <param name="file" value="/tmp/log4php.log" />

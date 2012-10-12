@@ -13,6 +13,13 @@ Features
 
 This module provides simple integration with the Apache log4php library.
 
+WARNING
+-------
+
+If you plan to view your log messages in a browser interface please use the
+LoggerRendererDrupalStandardObject renderer. Messages logged by other renderers are not passed through Drupal's
+check_plain() function and thus represent a security vector when viewed in a browser.
+
 
 Requirements
 ------------
