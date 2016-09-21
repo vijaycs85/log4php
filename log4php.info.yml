@@ -1,0 +1,5 @@
+name: 'Apache log4php'
+description: 'Logs and records system events to <a href="http://logging.apache.org/log4php/">Apache log4php</a>.'
+type: module
+core: 8.x
+version: VERSION

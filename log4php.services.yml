@@ -1,0 +1,9 @@
+services:
+  logger.log4php:
+    class: Drupal\log4php\Logger\Log4Php
+    arguments: ['@log4php.logger', '@logger.log_message_parser', '@config.factory']
+    tags:
+      - { name: logger }
+  log4php.logger:
+    class: Logger
+    arguments: ['watchdog']

@@ -1,0 +1,23 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the log4php module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function log4php_requirements($phase = 'runtime') {
+  $requirements = array();
+
+  if ($phase == 'runtime' && !class_exists('Logger')) {
+    $requirements['log4php'] = array(
+      'title' => t('log4php'),
+      'value' => t('Not installed'),
+      'description' => t('Your PHP installation does not include the log4php classes. Please read the <a href="@installation_instructions">installation instructions</a>.', array('@installation_instructions' => 'http://logging.apache.org/log4php/install.html')),
+      'severity' => REQUIREMENT_WARNING,
+    );
+  }
+  return $requirements;
+}
