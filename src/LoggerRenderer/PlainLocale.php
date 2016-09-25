@@ -10,7 +10,7 @@ namespace Drupal\log4php\LoggerRenderer;
  * WARNING: the messages logged by this logger are not sanitized and are meant to be viewed in
  * a terminal. Displaying these messages in a browser represents a potential security threat.
  */
-class LoggerRendererDrupalPlainLocaleObject extends DrupalLog {
+class PlainLocale extends DrupalLog {
 
   /**
    * @param \Drupal\log4php\LoggerRenderer\DrupalLog $drupalLog

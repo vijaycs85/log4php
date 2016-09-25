@@ -11,7 +11,7 @@ namespace Drupal\log4php\LoggerRenderer;
 class Standard extends DrupalLog {
 
   /**
-   * @param \Drupal\log4php\LoggerRenderDrupalLog $drupalLog
+   * @param \Drupal\log4php\LoggerRenderer\DrupalLog $drupalLog
    * @return string
    */
   public function render($drupalLog) {
